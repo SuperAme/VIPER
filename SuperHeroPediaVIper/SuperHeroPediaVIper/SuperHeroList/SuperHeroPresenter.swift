@@ -29,11 +29,16 @@ class SuperHeroPresenter: SuperHeroPresenterProtocol {
     var router: SuperHeroRouterProtocol?
     
     func viewDidLoad() {
-        
+        interactor?.getSuperHeroesList()
     }
     
     func interactorWithData(result: Result<[SuperHeroModel], Error>) {
-        
+        switch result {
+        case .success(let superHeroes):
+            view?.update(with: superHeroes)
+        case .failure(let error):
+            view?.update(with: "Try again later ...")
+        }
     }
     
     func tapOnDetail(_ superhero: SuperHeroModel) {
