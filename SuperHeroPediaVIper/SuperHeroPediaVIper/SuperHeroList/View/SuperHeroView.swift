@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 //Talks to presenter
 
@@ -24,16 +25,17 @@ class SuperHeroView: UIViewController, SuperHeroViewProtocol {
     var superHeroes: [SuperHeroModel] = []
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var errorLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Im Here")
         tableViewConfigurations()
         presenter?.viewDidLoad()
     }
     
     func tableViewConfigurations() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        let cell = UINib(nibName: "SuperHeroTableViewCell", bundle: nil)
+        tableView.register(cell, forCellReuseIdentifier: "customCell")
         tableView.delegate = self
         tableView.dataSource = self
     }
@@ -45,17 +47,22 @@ extension SuperHeroView {
             self?.superHeroes = superHeroes
             self?.tableView.reloadData()
             self?.tableView.isHidden = false
+            self?.errorLabel.isHidden = true
         }
     }
     
     func update(with error: String) {
-        
+        DispatchQueue.main.async { [weak self] in
+            self?.superHeroes = []
+            self?.tableView.isHidden = true
+            self?.errorLabel.isHidden = false
+        }
     }
 }
 
 extension SuperHeroView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Cell number \(indexPath.row)")
+        print("Cell number \(superHeroes[indexPath.row])")
     }
 }
 
@@ -65,11 +72,17 @@ extension SuperHeroView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-        var content = cell.defaultContentConfiguration()
-        content.text = superHeroes[indexPath.row].name
-        cell.contentConfiguration = content
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "customCell") as? SuperHeroTableViewCell {
+            cell.nameLabel.text = superHeroes[indexPath.row].name
+            if let image = superHeroes[indexPath.row].images.sm ,let url = URL(string: image) {
+                cell.heroImage.kf.setImage(with: url)
+            } else {
+                cell.heroImage.image = UIImage(named: "no-image")
+            }
+            return cell
+        }
+        
+        return UITableViewCell()
     }
     
     
