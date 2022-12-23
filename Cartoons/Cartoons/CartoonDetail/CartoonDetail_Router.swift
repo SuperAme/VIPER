@@ -37,12 +37,4 @@ class CartoonDetail_Router: CartoonDetail_Router_Protocol {
         return router
     }
     
-    func goToDetailView(cartoon: Cartoon) {
-        let detailRouter = CartoonDetail_Router.createCartoonDetail(with: cartoon)
-        guard let detailView = detailRouter.entry else { return }
-        guard let viewController = self.entry else { return }
-        
-        viewController.navigationController?.pushViewController(detailView, animated: true)
-    }
-    
 }

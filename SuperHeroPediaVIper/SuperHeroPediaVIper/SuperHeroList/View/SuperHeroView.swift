@@ -33,6 +33,12 @@ class SuperHeroView: UIViewController, SuperHeroViewProtocol {
         presenter?.viewDidLoad()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if let selectedIndex = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedIndex, animated: true)
+        }
+    }
+    
     func tableViewConfigurations() {
         let cell = UINib(nibName: "SuperHeroTableViewCell", bundle: nil)
         tableView.register(cell, forCellReuseIdentifier: "customCell")
@@ -62,7 +68,8 @@ extension SuperHeroView {
 
 extension SuperHeroView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Cell number \(superHeroes[indexPath.row])")
+        print("\(indexPath.row)")
+        presenter?.tapOnDetail(superHeroes[indexPath.row])
     }
 }
 

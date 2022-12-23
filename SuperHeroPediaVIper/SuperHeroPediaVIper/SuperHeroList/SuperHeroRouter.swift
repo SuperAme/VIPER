@@ -40,7 +40,11 @@ class SuperHeroRouter: SuperHeroRouterProtocol {
     }
     
     func goToDetailView(superHero: SuperHeroModel) {
-        
+        print(superHero.name)
+        let detailRouter = SuperHeroDetailRouter.createSuperHeroDetail(with: superHero)
+        guard let detailView = detailRouter.entry else { return }
+        guard let viewController = self.entry else { return }
+        viewController.present(detailView, animated: true)
     }
     
     

@@ -42,7 +42,7 @@ class SuperHeroPresenter: SuperHeroPresenterProtocol {
     }
     
     func tapOnDetail(_ superhero: SuperHeroModel) {
-        
+        router?.goToDetailView(superHero: superhero)
     }
     
     

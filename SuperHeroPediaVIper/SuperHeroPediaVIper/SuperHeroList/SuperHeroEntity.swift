@@ -14,4 +14,5 @@ struct SuperHeroModel: Codable {
 
 struct HeroesImages: Codable {
     let sm: String?
+    let lg: String?
 }
